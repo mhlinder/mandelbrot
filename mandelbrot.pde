@@ -1,4 +1,4 @@
-// http://warp.povusers.org/Mandelbrot/
+// helped by http://warp.povusers.org/Mandelbrot/
 
 // some basic setup
 float minreal = -2.0,
@@ -12,7 +12,7 @@ int w = 800,
 // if you're just drawing a static image (no animation)
 // you just need setup()
 void setup() {
-  size(w, h, P2D);
+  size(w, h);
 
   // center the origin (0, 0) at the center of our canvas
   translate(w/2, h/2);
@@ -44,7 +44,7 @@ void setup() {
 
         // this is the same as testing
         // sqrt(zreal2 + zimag2) > 2
-        if (real2 + zimag2 > 4) {
+        if (zreal2 + zimag2 > 4) {
           inset = false;
           break;
         }
@@ -66,5 +66,4 @@ void setup() {
   updatePixels();
 
   save("mandelbrot.png");
-  exit();
 }
