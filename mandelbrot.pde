@@ -7,12 +7,18 @@ float minreal = -2.0,
       maximag =  1.2;
 
 int w = 800,
-    h = int(w * (maximag-minimag) / (maxreal-minreal));
+    h = int(w * (maximag-minimag) / (maxreal-minreal)),
+    N = 0;
 
 // if you're just drawing a static image (no animation)
 // you just need setup()
 void setup() {
   size(w, h);
+  frameRate(2);
+}
+
+void draw() {
+  N++;
 
   // center the origin (0, 0) at the center of our canvas
   translate(w/2, h/2);
@@ -22,7 +28,6 @@ void setup() {
 
   float realfactor = (maxreal-minreal) / (width-1),
         imagfactor = (maximag-minimag) / (height-1);
-  int N = 50;
 
   // loop over the point at the center of every pixel
   for (int y = 0; y < height; y++) {  // rows
@@ -38,7 +43,8 @@ void setup() {
       // test if distance of sequence from the origin is ever larger than 2
       // (if so, the sequence z will diverge)
       boolean inset = true;
-      for (int n = 0; n < N; n++) {
+      int n;
+      for (n = 0; n < N; n++) {
         float zreal2 = zreal*zreal,
               zimag2 = zimag*zimag;
 
@@ -57,7 +63,13 @@ void setup() {
       if (inset) {
         pixels[x + width*y] = color(0);
       } else {
-        pixels[x + width*y] = color(255);
+        color c;
+        if (n < float(N)/2) {
+          c = lerpColor(color(0), color(255, 0, 0), float(n) / (float(N)/2));
+        } else {
+          c = lerpColor(color(255, 0, 0), color(255), float(n) / (float(N)/2));
+        }
+        pixels[x + width*y] = c;
       }
     }
   }
@@ -65,5 +77,10 @@ void setup() {
   // update the pixels on the screen
   updatePixels();
 
-  save("mandelbrot.png");
+  // save("mandelbrot.png");
+}
+
+void keyReleased() {
+  if (key == ' ') N = 0;
+  if (key == 's') save("mandelbrot" + nf(N, 3) + ".png");
 }
